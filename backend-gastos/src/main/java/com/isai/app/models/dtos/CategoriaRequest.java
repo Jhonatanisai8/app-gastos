@@ -1,11 +1,13 @@
 package com.isai.app.models.dtos;
 
 import jakarta.validation.constraints.NotEmpty;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class CategoriaRequest {
 
     @NotEmpty(message = "El nombre de la categoría no puede estar vacío")
