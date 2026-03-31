@@ -1,5 +1,10 @@
 package com.isai.app.service.impl;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
+
 import org.springframework.stereotype.Service;
 
 import com.isai.app.exceptions.CategoriaExistenteException;
@@ -29,4 +34,12 @@ public class CategoriaServiceIMPL implements CategoriaService {
         return categoriaMapper.toCategoriaResponse(savedCategoria);
     }
 
+    @Override
+    public Set<CategoriaResponse> obtenerTodasLasCategorias() {
+        Iterable<Categoria> categorias = categoriaRepository.findAll();
+        Stream<Categoria> categoriaStream = StreamSupport.stream(categorias.spliterator(), false);
+        return categoriaStream
+                .map(categoriaMapper::toCategoriaResponse)
+                .collect(Collectors.toSet());
+    }
 }
