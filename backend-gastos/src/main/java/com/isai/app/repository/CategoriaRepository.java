@@ -9,4 +9,5 @@ import com.isai.app.models.entities.Categoria;
 public interface CategoriaRepository
         extends CrudRepository<Categoria, Long> {
 
+    boolean existsByNombre(String nombre);
 }

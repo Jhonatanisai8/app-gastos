@@ -2,6 +2,7 @@ package com.isai.app.service.impl;
 
 import org.springframework.stereotype.Service;
 
+import com.isai.app.exceptions.CategoriaExistenteException;
 import com.isai.app.mapper.CategoriaMapper;
 import com.isai.app.models.dtos.CategoriaRequest;
 import com.isai.app.models.dtos.CategoriaResponse;
@@ -20,6 +21,9 @@ public class CategoriaServiceIMPL implements CategoriaService {
 
     @Override
     public CategoriaResponse guardarCategoria(CategoriaRequest categoriaRequest) {
+        if (categoriaRepository.existsByNombre(categoriaRequest.getNombre())) {
+            throw new CategoriaExistenteException();
+        }
         Categoria categoria = categoriaMapper.toCategoria(categoriaRequest);
         Categoria savedCategoria = categoriaRepository.save(categoria);
         return categoriaMapper.toCategoriaResponse(savedCategoria);
