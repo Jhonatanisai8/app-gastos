@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 
 import com.isai.app.exceptions.CategoriaExistenteException;
 import com.isai.app.mapper.CategoriaMapper;
-import com.isai.app.models.dtos.CategoriaRequest;
-import com.isai.app.models.dtos.CategoriaResponse;
+import com.isai.app.models.dtos.req.CategoriaRequest;
+import com.isai.app.models.dtos.res.CategoriaResponse;
 import com.isai.app.models.entities.Categoria;
 import com.isai.app.repository.CategoriaRepository;
 import com.isai.app.service.CategoriaService;

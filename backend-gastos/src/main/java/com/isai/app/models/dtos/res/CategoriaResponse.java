@@ -1,4 +1,4 @@
-package com.isai.app.models.dtos;
+package com.isai.app.models.dtos.res;
 
 import java.time.LocalDateTime;
 

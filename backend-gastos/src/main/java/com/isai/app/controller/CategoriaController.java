@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.isai.app.models.dtos.CategoriaRequest;
-import com.isai.app.models.dtos.CategoriaResponse;
+import com.isai.app.models.dtos.req.CategoriaRequest;
+import com.isai.app.models.dtos.res.CategoriaResponse;
 import com.isai.app.service.CategoriaService;
 
 import jakarta.validation.Valid;

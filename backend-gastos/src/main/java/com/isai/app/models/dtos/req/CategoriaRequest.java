@@ -1,4 +1,4 @@
-package com.isai.app.models.dtos;
+package com.isai.app.models.dtos.req;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
