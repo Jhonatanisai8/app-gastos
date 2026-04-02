@@ -38,6 +38,27 @@
   letter-spacing: -0.01em;
 }
 
+/* Feedback Messages */
+.error-message {
+  background-color: var(--danger);
+  color: white;
+  padding: 12px;
+  margin-bottom: 24px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.success-message {
+  background-color: var(--success);
+  color: white;
+  padding: 12px;
+  margin-bottom: 24px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 500;
+}
+
 .header-menu-btn {
   background: none;
   border: none;
@@ -359,8 +380,13 @@
   box-shadow: 0 12px 32px rgba(15, 98, 254, 0.35);
 }
 
-.primary-button:active {
-  transform: scale(0.98);
+.primary-button.loading span {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 /* Bottom Navigation */

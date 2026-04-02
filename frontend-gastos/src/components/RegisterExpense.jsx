@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./RegisterExpense.css";
 import { useListarCategorias } from "../hooks/useListarCategorias";
+import { useRegistrarGasto } from "../hooks/useRegistrarGasto";
 
 const ICON_MAP = {
   Food: "restaurant",
@@ -31,39 +32,77 @@ const PAYMENT_METHODS = [
 ];
 
 const RegisterExpense = () => {
-  const { categorias, cargando } = useListarCategorias();
-  //para los campos
+  const { categorias, cargando: cargandoCategorias } = useListarCategorias();
+  const {
+    enviarSolicitud,
+    cargando: registrando,
+    error,
+    data,
+  } = useRegistrarGasto();
+
   const [formularioData, setFormularioData] = useState({
     monto: "",
     descripcion: "",
-    fechaGasto: "",
-    metodoPago: "",
+    fechaGasto: new Date().toISOString().split("T")[0],
+    metodoPago: "EFECTIVO",
     idCategoria: "",
   });
 
-  // funcion para manejar los inputs
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormularioData({
-      ...formularioData,
-      [name]: value,
-    });
-  };
-  useEffect(() => {
-    if (categorias.length > 0 && !selectedCategoryId) {
-      setSelectedCategoryId(categorias[0].idCategoria);
-    }
-  }, [categorias, selectedCategoryId]);
+  const [mensajeExito, setMensajeExito] = useState(null);
 
-  const handleSave = () => {
-    const expense = {
-      monto: parseFloat(amount),
-      idCategoria: selectedCategoryId,
-      fechaGasto: date,
-      descripcion: note,
-      metodoPago: paymentMethod,
-    };
-    console.log("Saving expense:", expense);
+  // se inicializa la categoria por defecto
+  useEffect(() => {
+    if (categorias?.length > 0 && !formularioData.idCategoria) {
+      setFormularioData((prev) => ({
+        ...prev,
+        idCategoria: categorias[0].idCategoria,
+      }));
+    }
+  }, [categorias, formularioData.idCategoria]);
+
+  // metodos handlers
+  const manejarCambio = (e) => {
+    const { name, value } = e.target;
+    setFormularioData({ ...formularioData, [name]: value });
+  };
+
+  const seleccionarCategoria = (id) => {
+    setFormularioData({ ...formularioData, idCategoria: id });
+  };
+
+  const seleccionarMetodo = (id) => {
+    setFormularioData({ ...formularioData, metodoPago: id });
+  };
+
+  const guardarGasto = async () => {
+    // Validación básica
+    if (!formularioData.monto || parseFloat(formularioData.monto) <= 0) {
+      alert("Por favor ingresa un monto válido");
+      return;
+    }
+
+    try {
+      const gastaAEnviar = {
+        ...formularioData,
+        monto: parseFloat(formularioData.monto),
+      };
+
+      await enviarSolicitud(gastaAEnviar);
+      setMensajeExito("¡Gasto registrado con éxito!");
+
+      // Limpiar formulario excepto categoría y método por defecto
+      setTimeout(() => {
+        setFormularioData((prev) => ({
+          ...prev,
+          monto: "",
+          descripcion: "",
+          fechaGasto: new Date().toISOString().split("T")[0],
+        }));
+        setMensajeExito(null);
+      }, 2000);
+    } catch (err) {
+      console.error("Error al guardar:", err);
+    }
   };
 
   return (
@@ -81,35 +120,43 @@ const RegisterExpense = () => {
       </header>
 
       <main className="expense-form">
-        {/* input para el monto*/}
+        {/* Sección de Mensajes */}
+        {error && (
+          <div className="error-message">
+            Error: {error.message || "No se pudo registrar"}
+          </div>
+        )}
+        {mensajeExito && <div className="success-message">{mensajeExito}</div>}
+
+        {/* Input para el monto */}
         <section className="form-section amount-section">
-          <label className="section-label">AMOUNT</label>
+          <label className="section-label">MONTO</label>
           <div className="amount-input-wrapper">
             <span className="currency-symbol">$</span>
             <input
+              name="monto"
               type="number"
               className="amount-input"
               placeholder="0.00"
               value={formularioData.monto}
-              onChange={(e) => setAmount(e.target.value)}
+              onChange={manejarCambio}
               autoFocus
             />
           </div>
         </section>
 
+        {/* Sección de Categorías */}
         <section className="form-section">
-          <label className="section-label">CATEGORY</label>
+          <label className="section-label">CATEGORÍA</label>
           <div className="category-grid">
-            {cargando ? (
-              <div className="loading-categories">Cargando...</div>
+            {cargandoCategorias ? (
+              <div className="loading-categories">Cargando categorías...</div>
             ) : (
               categorias.map((cat) => (
                 <button
                   key={cat.idCategoria}
-                  className={`category-item ${
-                    selectedCategoryId === cat.idCategoria ? "active" : ""
-                  }`}
-                  onClick={() => setSelectedCategoryId(cat.idCategoria)}
+                  className={`category-item ${formularioData.idCategoria === cat.idCategoria ? "active" : ""}`}
+                  onClick={() => seleccionarCategoria(cat.idCategoria)}
                 >
                   <span className="material-symbols-outlined">
                     {ICON_MAP[cat.nombre] || "category"}
@@ -121,17 +168,15 @@ const RegisterExpense = () => {
           </div>
         </section>
 
-        {/* seccion de metodos de pago */}
+        {/* Sección de Métodos de Pago */}
         <section className="form-section">
-          <label className="section-label">PAYMENT METHOD</label>
+          <label className="section-label">MÉTODO DE PAGO</label>
           <div className="payment-grid">
             {PAYMENT_METHODS.map((pm) => (
               <button
                 key={pm.id}
-                className={`payment-item ${
-                  paymentMethod === pm.id ? "active" : ""
-                }`}
-                onClick={() => setPaymentMethod(pm.id)}
+                className={`payment-item ${formularioData.metodoPago === pm.id ? "active" : ""}`}
+                onClick={() => seleccionarMetodo(pm.id)}
               >
                 <span className="material-symbols-outlined">{pm.icon}</span>
                 <span className="payment-label">{pm.label}</span>
@@ -140,40 +185,42 @@ const RegisterExpense = () => {
           </div>
         </section>
 
-        {/* input para la fehca y la nota */}
+        {/* Fecha y Nota */}
         <div className="form-row">
           <section className="form-section half-width">
-            <label className="section-label">DATE</label>
+            <label className="section-label">FECHA</label>
             <div className="input-field">
               <input
+                name="fechaGasto"
                 type="date"
                 className="input-control"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
+                value={formularioData.fechaGasto}
+                onChange={manejarCambio}
               />
             </div>
           </section>
           <section className="form-section half-width">
-            <label className="section-label">SHORT NOTE</label>
+            <label className="section-label">NOTA CORTA</label>
             <div className="input-field">
               <input
+                name="descripcion"
                 type="text"
                 className="input-control"
-                placeholder="Lunch with colleagues"
-                value={note}
-                onChange={(e) => setNote(e.target.value)}
+                placeholder="Ej. Almuerzo del lunes"
+                value={formularioData.descripcion}
+                onChange={manejarCambio}
               />
             </div>
           </section>
         </div>
 
-        {/* seccion de presupuesto y tendencias*/}
+        {/* Sección Bento (Informativa) */}
         <div className="info-cards">
           <div className="budget-card">
-            <p className="card-label">MONTHLY BUDGET</p>
+            <p className="card-label">PRESUPUESTO MENSUAL</p>
             <div className="budget-value-row">
               <span className="budget-amount">$2,450.00</span>
-              <span className="budget-suffix">Left</span>
+              <span className="budget-suffix">Restante</span>
             </div>
             <div className="budget-progress-bg">
               <div
@@ -186,24 +233,30 @@ const RegisterExpense = () => {
             <span className="material-symbols-outlined trending-icon">
               trending_up
             </span>
-            <p className="trending-text">TRENDING HIGH</p>
+            <p className="trending-text">ALTO CONSUMO</p>
           </div>
         </div>
       </main>
 
-      {/* boton de guardar */}
+      {/* Botón de Guardar */}
       <div className="action-button-container">
-        <button className="primary-button" onClick={handleSave}>
-          <span className="material-symbols-outlined">check</span>
-          Guardar Gasto
+        <button
+          className={`primary-button ${registrando ? "loading" : ""}`}
+          onClick={guardarGasto}
+          disabled={registrando}
+        >
+          <span className="material-symbols-outlined">
+            {registrando ? "sync" : "check"}
+          </span>
+          {registrando ? "Guardando..." : "Guardar Gasto"}
         </button>
       </div>
 
-      {/* boton para ir a la pantalla de inicio */}
+      {/* Navegación Inferior */}
       <nav className="bottom-nav">
         <button className="nav-item">
           <span className="material-symbols-outlined">home</span>
-          <span>Home</span>
+          <span>Inicio</span>
         </button>
         <button className="nav-item active">
           <span
@@ -212,11 +265,11 @@ const RegisterExpense = () => {
           >
             add_circle
           </span>
-          <span>Add</span>
+          <span>Añadir</span>
         </button>
         <button className="nav-item">
           <span className="material-symbols-outlined">history</span>
-          <span>History</span>
+          <span>Historial</span>
         </button>
       </nav>
     </div>
