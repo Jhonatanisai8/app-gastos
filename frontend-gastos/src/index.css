@@ -1,0 +1,48 @@
+:root {
+  /* Carbon Design Tokens */
+  --primary: #0f62fe;
+  --primary-hover: #0353e9;
+  --background: #ffffff;
+  --surface: #ffffff;
+  --surface-container: #f4f4f4;
+  --surface-container-high: #e0e0e0;
+  --on-surface: #161616;
+  --on-surface-variant: #525252;
+  --secondary: #6f6f6f;
+  --outline-variant: #e0e0e0;
+  --success: #198038;
+  --danger: #da1e28;
+  
+  /* Fonts */
+  --font-sans: 'IBM Plex Sans', sans-serif;
+  
+  /* Elevation */
+  --elevation-1: 0 2px 6px rgba(0, 0, 0, 0.1);
+  --elevation-2: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--background);
+  color: var(--on-surface);
+  line-height: 1.5;
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+}

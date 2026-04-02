@@ -1,14 +1,14 @@
-import { useState } from 'react'
-import './App.css'
-import ListaCategorias from './components/ListaCategorias'
+import { useState } from "react";
+import "./App.css";
+import ListaCategorias from "./components/ListaCategorias";
+import RegisterExpense from "./components/RegisterExpense";
 
 function App() {
-
   return (
     <>
-   <ListaCategorias />
+      <RegisterExpense />
     </>
-  )
+  );
 }
 
-export default App
+export default App;
