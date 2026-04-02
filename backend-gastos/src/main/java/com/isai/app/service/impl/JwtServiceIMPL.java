@@ -19,11 +19,10 @@ import io.jsonwebtoken.security.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor
 public class JwtServiceIMPL implements JwtService {
 
     @Value("${jwt.secret}")
-    private final String SECRET_KEY;
+    private String SECRET_KEY;
 
     @Override
     public String obtenerToken(UserDetails usuario) {
