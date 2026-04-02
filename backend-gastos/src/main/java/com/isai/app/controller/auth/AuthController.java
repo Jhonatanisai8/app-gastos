@@ -4,7 +4,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.isai.app.models.dtos.req.LoginRequest;
-import com.isai.app.models.dtos.req.RegistroRequest;
 import com.isai.app.models.dtos.res.AuthResponse;
 import com.isai.app.service.AuthService;
 
@@ -13,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import com.isai.app.models.dtos.req.UsuarioRegistroRequest;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,8 +27,8 @@ public class AuthController {
     }
 
     @PostMapping("/registro")
-    public ResponseEntity<AuthResponse> registro(@RequestBody RegistroRequest registroRequest) {
-        return ResponseEntity.ok(authService.registro(registroRequest));
+    public ResponseEntity<AuthResponse> registro(@RequestBody UsuarioRegistroRequest usuarioRegistroRequest) {
+        return ResponseEntity.ok(authService.registro(usuarioRegistroRequest));
     }
 
 }

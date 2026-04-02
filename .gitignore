@@ -1,2 +1,7 @@
 backend-gastos/src/main/resources/application.properties
 .vscode/settings.json
+frontend-gastos/index.html
+.gitignore
+frontend-gastos/screen.png
+frontend-gastos/index.html
+.gitignore

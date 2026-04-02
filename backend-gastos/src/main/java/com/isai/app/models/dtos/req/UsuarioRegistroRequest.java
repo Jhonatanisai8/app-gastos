@@ -11,7 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class RegistroRequest {
+public class UsuarioRegistroRequest {
     private String username;
     private String password;
     private String nombres;
