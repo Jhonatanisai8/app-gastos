@@ -5,6 +5,7 @@ import java.security.Signature;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.isai.app.service.JwtService;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -42,6 +44,39 @@ public class JwtServiceIMPL implements JwtService {
     private Key obtenerClave() {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    @Override
+    public boolean esTokenValido(String token, UserDetails userDetails) {
+        final String userName = obtenerNombreUsuario(token);
+        return (userName.equals(userDetails.getUsername()) && !esTokenExpirado(token));
+    }
+
+    @Override
+    public String obtenerNombreUsuario(String token) {
+        return obtenerClaim(token, Claims::getSubject);
+    }
+
+    private Claims obtenerClaims(String token) {
+        return Jwts.parser()
+                .setSigningKey(obtenerClave())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
+    public <T> T obtenerClaim(String token, Function<Claims, T> claimsResolver) {
+        final Claims claims = obtenerClaims(token);
+        return claimsResolver.apply(claims);
+    }
+
+    private Date obtenetFechaExperacion(String token) {
+        return obtenerClaim(token, Claims::getExpiration);
+    }
+
+    private boolean esTokenExpirado(String token) {
+        return obtenetFechaExperacion(token)
+                .before(new Date());
     }
 
 }
