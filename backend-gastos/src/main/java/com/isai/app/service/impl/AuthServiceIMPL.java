@@ -1,5 +1,6 @@
 package com.isai.app.service.impl;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.isai.app.mapper.UsuarioMapper;
@@ -18,24 +19,27 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthServiceIMPL implements AuthService {
 
-  private final UsuarioRepository usuarioRepository;
+    private final UsuarioRepository usuarioRepository;
 
-  private final UsuarioMapper usuarioMapper;
+    private final UsuarioMapper usuarioMapper;
 
-  private final JwtService jwtService;
+    private final JwtService jwtService;
 
-  @Override
-  public AuthResponse login(LoginRequest loginRequest) {
-    return null;
-  }
+    private final PasswordEncoder passwordEncoder;
 
-  @Override
-  public AuthResponse registro(UsuarioRegistroRequest usuarioRegistroRequest) {
-    Usuario usuario = usuarioMapper.toUsuario(usuarioRegistroRequest);
-    usuario.setRol(Rol.USUARIO);
-    Usuario usuarioGuardado = usuarioRepository.save(usuario);
-    AuthResponse authResponse = usuarioMapper.toUsuarioResponse(usuarioGuardado);
-    authResponse.setToken(jwtService.obtenerToken(usuarioGuardado));
-    return authResponse;
-  }
+    @Override
+    public AuthResponse login(LoginRequest loginRequest) {
+        return null;
+    }
+
+    @Override
+    public AuthResponse registro(UsuarioRegistroRequest usuarioRegistroRequest) {
+        Usuario usuario = usuarioMapper.toUsuario(usuarioRegistroRequest);
+        usuario.setRol(Rol.USUARIO);
+        usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
+        Usuario usuarioGuardado = usuarioRepository.save(usuario);
+        AuthResponse authResponse = usuarioMapper.toUsuarioResponse(usuarioGuardado);
+        authResponse.setToken(jwtService.obtenerToken(usuarioGuardado));
+        return authResponse;
+    }
 }
