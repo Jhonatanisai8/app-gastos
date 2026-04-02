@@ -18,7 +18,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) {
         return httpSecurity
                 .csrf(crsf -> crsf.disable())
-                .authorizeHttpRequests(authRequest -> authRequest.requestMatchers("/auth/**").permitAll()
+                .authorizeHttpRequests(authRequest -> authRequest.requestMatchers("/api/v1/auth/**").permitAll()
                         .anyRequest().authenticated())
                 .formLogin(Customizer.withDefaults())
                 .build();
