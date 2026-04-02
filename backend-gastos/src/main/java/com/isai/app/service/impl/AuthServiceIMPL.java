@@ -1,5 +1,8 @@
 package com.isai.app.service.impl;
 
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -27,9 +30,21 @@ public class AuthServiceIMPL implements AuthService {
 
     private final PasswordEncoder passwordEncoder;
 
+    private final AuthenticationManager authenticationManager;
+
     @Override
     public AuthResponse login(LoginRequest loginRequest) {
-        return null;
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                loginRequest.getUsername(), loginRequest.getPassword()));
+
+        UserDetails usuario = usuarioRepository.findByUsername(loginRequest.getUsername())
+                .orElseThrow();
+
+        String token = jwtService.obtenerToken(usuario);
+        return AuthResponse.builder()
+                .token(token)
+                .build();
+
     }
 
     @Override
