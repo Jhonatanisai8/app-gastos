@@ -9,14 +9,14 @@ import com.isai.app.service.AuthService;
 
 @Service
 public class AuthServiceIMPL implements AuthService {
+
     @Override
     public AuthResponse login(LoginRequest loginRequest) {
-        
-        
+        return null;
     }
 
     @Override
     public AuthResponse registro(RegistroRequest registroRequest) {
-        
+        return null;
     }
 }

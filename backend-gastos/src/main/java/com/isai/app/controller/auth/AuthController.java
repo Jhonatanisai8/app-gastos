@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.isai.app.models.dtos.req.LoginRequest;
 import com.isai.app.models.dtos.req.RegistroRequest;
 import com.isai.app.models.dtos.res.AuthResponse;
-import com.isai.app.service.impl.AuthService;
+import com.isai.app.service.AuthService;
 
 import lombok.RequiredArgsConstructor;
 
