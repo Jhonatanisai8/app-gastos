@@ -159,6 +159,61 @@
   color: var(--primary);
 }
 
+/* Payment Grid */
+.payment-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.payment-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 12px 8px;
+  background-color: var(--surface-container);
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.payment-item span {
+  font-size: 20px;
+  color: var(--secondary);
+}
+
+.payment-item .payment-label {
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.payment-item:hover {
+  background-color: var(--surface-container-high);
+}
+
+.payment-item.active {
+  background-color: var(--surface-container);
+  border-bottom-color: var(--primary);
+}
+
+.payment-item.active span, 
+.payment-item.active .payment-label {
+  color: var(--primary);
+}
+
+.loading-categories {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 24px;
+  color: var(--secondary);
+  font-size: 14px;
+  background-color: var(--surface-container);
+}
+
 /* Form Row */
 .form-row {
   display: flex;
