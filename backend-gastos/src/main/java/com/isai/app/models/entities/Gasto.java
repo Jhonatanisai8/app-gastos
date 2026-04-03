@@ -28,34 +28,38 @@ import lombok.Setter;
 @Table(name = "gastos")
 public class Gasto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_gasto")
-    private Long idGasto;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id_gasto")
+  private Long idGasto;
 
-    @NotNull
-    private BigDecimal monto;
+  @NotNull
+  private BigDecimal monto;
 
-    @NotEmpty
-    private String descripcion;
+  @NotEmpty
+  private String descripcion;
 
-    @Column(name = "fecha_gasto")
-    private LocalDate fechaGasto;
+  @Column(name = "fecha_gasto")
+  private LocalDate fechaGasto;
 
-    @ManyToOne
-    @JoinColumn(name = "id_categoria")
-    private Categoria categoria;
+  @ManyToOne
+  @JoinColumn(name = "id_categoria")
+  private Categoria categoria;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "metodo_pago")
-    private EnumMetodoPago metodoPago;
+  @Enumerated(EnumType.STRING)
+  @Column(name = "metodo_pago")
+  private EnumMetodoPago metodoPago;
 
-    @Column(name = "creado_en")
-    @NotNull
-    private LocalDateTime creadoEn;
+  @Column(name = "creado_en")
+  @NotNull
+  private LocalDateTime creadoEn;
 
-    @PrePersist
-    protected void onCreate() {
-        this.creadoEn = LocalDateTime.now();
-    }
+  @ManyToOne
+  @JoinColumn(name = "id_usuario")
+  private Usuario usuario;
+
+  @PrePersist
+  protected void onCreate() {
+    this.creadoEn = LocalDateTime.now();
+  }
 }
