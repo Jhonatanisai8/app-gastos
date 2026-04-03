@@ -18,5 +18,4 @@ public class GastoRequest {
     private LocalDate fechaGasto;
     private String metodoPago;
     private Long idCategoria;
-    private Long idUsuario;
 }

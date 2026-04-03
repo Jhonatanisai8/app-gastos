@@ -1,5 +1,6 @@
 package com.isai.app.service.impl;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import com.isai.app.exceptions.CategoriaNotFoundException;
@@ -21,31 +22,31 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class GastoServiceIMPL implements GastoService {
 
-    private final GastoMapper gastoMapper;
+  private final GastoMapper gastoMapper;
 
-    private final GastoRepository gastoRepository;
+  private final GastoRepository gastoRepository;
 
-    private final CategoriaRepository categoriaRepository;
+  private final CategoriaRepository categoriaRepository;
 
-    private final UsuarioRepository usuarioRepository;
+  private final UsuarioRepository usuarioRepository;
 
-    @Override
-    public GastoResponse guardarGasto(GastoRequest gastoRequest) {
-        Usuario usuario = usuarioRepository.findById(gastoRequest.getIdUsuario())
-                .orElseThrow(() -> new UsuarioNotFoundException());
+  @Override
+  public GastoResponse guardarGasto(GastoRequest gastoRequest, Authentication authentication) {
+    Usuario usuario = usuarioRepository.findByUsername(authentication.getName())
+        .orElseThrow(() -> new UsuarioNotFoundException());
 
-        return categoriaRepository.findById(gastoRequest.getIdCategoria())
-                .map(categoria -> {
-                    Gasto gasto = new Gasto();
-                    gasto.setMonto(gastoRequest.getMonto());
-                    gasto.setDescripcion(gastoRequest.getDescripcion());
-                    gasto.setFechaGasto(gastoRequest.getFechaGasto());
-                    gasto.setMetodoPago(EnumMetodoPago.valueOf(gastoRequest.getMetodoPago()));
-                    gasto.setCategoria(categoria);
-                    gasto.setUsuario(usuario);
-                    return gastoRepository.save(gasto);
-                }).map(gasto -> gastoMapper.toGastoResponse(gasto))
-                .orElseThrow(() -> new CategoriaNotFoundException());
-    }
+    return categoriaRepository.findById(gastoRequest.getIdCategoria())
+        .map(categoria -> {
+          Gasto gasto = new Gasto();
+          gasto.setMonto(gastoRequest.getMonto());
+          gasto.setDescripcion(gastoRequest.getDescripcion());
+          gasto.setFechaGasto(gastoRequest.getFechaGasto());
+          gasto.setMetodoPago(EnumMetodoPago.valueOf(gastoRequest.getMetodoPago()));
+          gasto.setCategoria(categoria);
+          gasto.setUsuario(usuario);
+          return gastoRepository.save(gasto);
+        }).map(gasto -> gastoMapper.toGastoResponse(gasto))
+        .orElseThrow(() -> new CategoriaNotFoundException());
+  }
 
 }

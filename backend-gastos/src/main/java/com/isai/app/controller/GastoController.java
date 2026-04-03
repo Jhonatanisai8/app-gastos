@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import java.net.URI;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,14 +24,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequiredArgsConstructor
 public class GastoController {
 
-    private final GastoService gastoService;
+  private final GastoService gastoService;
 
-    @PostMapping()
-    public ResponseEntity<GastoResponse> guardarGasto(@Valid @RequestBody GastoRequest gastoRequest) {
-        GastoResponse gasto = gastoService.guardarGasto(gastoRequest);
-        return ResponseEntity
-                .created(URI.create("/api/v1/gastos/" + gasto.getIdGasto()))
-                .body(gasto);
-    }
+  @PostMapping()
+  public ResponseEntity<GastoResponse> guardarGasto(
+      @Valid @RequestBody GastoRequest gastoRequest,
+      Authentication authentication) {
+    GastoResponse gasto = gastoService.guardarGasto(gastoRequest, authentication);
+    return ResponseEntity
+        .created(URI.create("/api/v1/gastos/" + gasto.getIdGasto()))
+        .body(gasto);
+  }
 
 }
