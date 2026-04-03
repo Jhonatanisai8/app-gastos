@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./RegistroUsuario.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useRegistrarUsuario } from "../../hooks/useRegistrarUsuario";
 
 const RegistroUsuario = () => {
@@ -12,6 +12,7 @@ const RegistroUsuario = () => {
     ciudad: "",
   });
   const { enviarSolicitud, cargando, error, data } = useRegistrarUsuario();
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -33,6 +34,7 @@ const RegistroUsuario = () => {
         apellidos: "",
         ciudad: "",
       });
+      navigate("/");
     }
   };
 
