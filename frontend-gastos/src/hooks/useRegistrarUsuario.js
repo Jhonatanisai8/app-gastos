@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { registrarUsuario } from "../service/usuarioService";
+import { authStorage } from "../utils/authStorage";
 
 export const useRegistrarUsuario = () => {
   const [cargando, setCargando] = useState(false);
@@ -11,6 +12,9 @@ export const useRegistrarUsuario = () => {
     setError(null);
     try {
       const resultado = await registrarUsuario(usuarioData);
+      if (resultado && resultado.token) {
+        authStorage.setToken(resultado.token);
+      }
       setData(resultado);
       return resultado;
     } catch (error) {
