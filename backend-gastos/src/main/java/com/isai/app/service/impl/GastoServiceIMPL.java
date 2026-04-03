@@ -1,5 +1,7 @@
 package com.isai.app.service.impl;
 
+import java.math.BigDecimal;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -49,4 +51,11 @@ public class GastoServiceIMPL implements GastoService {
         .orElseThrow(() -> new CategoriaNotFoundException());
   }
 
+  @Override
+  public BigDecimal obtenerTotalGastadoPorUsuario(Authentication authentication) {
+    Usuario usuario = usuarioRepository.findByUsername(authentication.getName())
+        .orElseThrow(() -> new UsuarioNotFoundException());
+    return gastoRepository.sumByIdUsuario(usuario.getIdUsuario())
+        .orElse(BigDecimal.ZERO);
+  }
 }

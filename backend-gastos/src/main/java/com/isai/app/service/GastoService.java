@@ -1,5 +1,7 @@
 package com.isai.app.service;
 
+import java.math.BigDecimal;
+
 import org.springframework.security.core.Authentication;
 
 import com.isai.app.models.dtos.req.GastoRequest;
@@ -9,4 +11,5 @@ public interface GastoService {
 
   GastoResponse guardarGasto(GastoRequest gastoRequest, Authentication authentication);
 
+  BigDecimal obtenerTotalGastadoPorUsuario(Authentication authentication);
 }

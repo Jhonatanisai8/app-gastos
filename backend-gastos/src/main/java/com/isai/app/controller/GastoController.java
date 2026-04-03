@@ -10,11 +10,13 @@ import com.isai.app.service.GastoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+import java.math.BigDecimal;
 import java.net.URI;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -34,6 +36,12 @@ public class GastoController {
     return ResponseEntity
         .created(URI.create("/api/v1/gastos/" + gasto.getIdGasto()))
         .body(gasto);
+  }
+
+  @GetMapping("/total")
+  public ResponseEntity<BigDecimal> obtenerTotalGastadoPorUsuario(Authentication authentication) {
+    BigDecimal total = gastoService.obtenerTotalGastadoPorUsuario(authentication);
+    return ResponseEntity.ok(total);
   }
 
 }

@@ -9,5 +9,5 @@ import com.isai.app.models.entities.Usuario;
 
 @Repository
 public interface UsuarioRepository extends CrudRepository<Usuario, Long> {
-    Optional<Usuario> findByUsername(String userName);
+  Optional<Usuario> findByUsername(String userName);
 }
